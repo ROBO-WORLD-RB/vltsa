@@ -26,6 +26,7 @@ jobs:
       - id: deploy
         uses: prisma/cloud-deploy-action@v1
         with:
+          install-command: bun install
           module: module.ts
           build-command: npm run build
 
