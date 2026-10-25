@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';
+let js=await fs.readFile('public/store.js','utf8');
+js=js.replace("card.querySelector('h3').textContent=item.name;", "if(card.querySelector('h3').textContent!==item.name)card.querySelector('h3').textContent=item.name;");
+const needle="img.src=safeImage(p.image);img.alt=item.name;";
+if(!js.includes('frame.dataset.badgeModel'))js=js.replace(needle,needle+"const frame=img.parentElement;if(p.modelUrl){frame.dataset.badgeModel=p.modelUrl;frame.dataset.badgeTag=p.tag;}else{delete frame.dataset.badgeModel;delete frame.dataset.badgeTag;}");
+const checkoutImage='<img src="${escapeHtml(safeImage(p.image))}" alt="${escapeHtml(p.name)}">';
+if(!js.includes('class="checkout-badge-frame"'))js=js.replace(checkoutImage,'<div class="checkout-badge-frame" ${p.modelUrl?\'data-badge-model="\'+escapeHtml(p.modelUrl)+\'" data-badge-tag="\'+escapeHtml(p.tag)+\'"\':\'\'}>'+checkoutImage+'</div>');
+await fs.writeFile('public/store.js',js);
+let css=await fs.readFile('public/store.css','utf8');
+if(!css.includes('#product-badge-layer'))css+='\n#product-badge-layer{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:30} [data-badge-model]{isolation:isolate}.checkout-badge-frame{position:relative;aspect-ratio:585/330;width:100%;overflow:hidden;border-radius:6px}.checkout-badge-frame img{display:block;width:100%;height:100%;object-fit:cover}\n';
+await fs.writeFile('public/store.css',css);

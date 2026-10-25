@@ -1,0 +1,9 @@
+node_modules
+.git
+.env*
+!.env.example
+data/*.sqlite*
+storage
+docs
+tests
+reference

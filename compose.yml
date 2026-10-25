@@ -1,0 +1,16 @@
+services:
+  vltstore:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3000
+      DATABASE_PATH: /app/storage/orders.sqlite
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - vltstore-data:/app/storage
+
+volumes:
+  vltstore-data:

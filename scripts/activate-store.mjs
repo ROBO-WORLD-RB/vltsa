@@ -1,0 +1,14 @@
+import fs from 'node:fs/promises';
+let js=await fs.readFile('public/store.js','utf8');
+const start=js.indexOf('async function checkout(id){');
+const end=js.indexOf('const id=location.pathname',start);
+if(start<0||end<0)throw Error('Checkout source markers missing');
+js=js.slice(0,start)+`async function checkout(id){const ui=await import('/checkout-ui.mjs');return ui.checkout(id);}\nasync function order(token){const ui=await import('/checkout-ui.mjs');return ui.order(token);}\n`+js.slice(end);
+js=js.replace(/async function catalogue\(\)\{[^\n]+/,"async function catalogue(){if(!catalogPromise)catalogPromise=fetch('/api/catalog').then(r=>{if(!r.ok)throw Error('Unable to load inventory');return r.json();}).then(items=>{preview=items;live=items;return items;});return catalogPromise;}");
+js=js.replace("Support channels will be added before the store opens. No Vltstore orders are being accepted from the preview catalogue.","For help with a purchase, keep your order link and order reference. Your order page shows the latest payment and delivery status.")
+ .replace("This storefront is a development preview. Catalogue names, descriptions and prices mirror the reference layout and do not represent inventory owned by Vltstore. Purchase and delivery terms must be published before opening sales.","Review the listing details and price before placing your order. Cryptocurrency payments are confirmed through OxaPay. Keep your order link to track payment confirmation and delivery.")
+ .replace("This preview does not use analytics. When checkout is activated, the email you submit is stored with your order and shared with OxaPay to process payment. A complete privacy notice and retention policy must be published before sales begin.","The email you submit is stored with your order and shared with OxaPay for payment processing. Your payment status and order details are available through your private order link. Keep that link confidential.");
+await fs.writeFile('public/store.js',js);
+for(const file of ['data/catalog.json','public/catalog-preview.json']){const catalog=JSON.parse(await fs.readFile(file,'utf8'));for(const p of catalog)p.active=true;await fs.writeFile(file,JSON.stringify(catalog,null,2));}
+const html=await fs.readFile('public/index.html','utf8');
+await fs.writeFile('public/index.html',html.replaceAll('Preview listings cannot be purchased.','').replaceAll('Vltstore support details will be published before the store opens. The original site&#x2019;s support channels are not affiliated with Vltstore.','For help with your purchase, keep your order link and order reference. Your order page shows your current payment and delivery status.').replaceAll('Vltstore support details will be published before the store opens. The original site\'s support channels are not affiliated with Vltstore.','For help with your purchase, keep your order link and order reference. Your order page shows your current payment and delivery status.'));

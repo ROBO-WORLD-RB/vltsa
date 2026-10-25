@@ -1,0 +1,551 @@
+{
+  "BTC": {
+    "symbol": "BTC",
+    "name": "Bitcoin",
+    "status": true,
+    "networks": {
+      "Bitcoin": {
+        "network": "Bitcoin",
+        "name": "Bitcoin Network",
+        "keys": [
+          "Bitcoin",
+          "BTC"
+        ],
+        "required_confirmations": 2,
+        "withdraw_fee": 0.00001,
+        "withdraw_min": 0.000045,
+        "deposit_min": 0.0001244524,
+        "static_fixed_fee": 0.000002
+      }
+    }
+  },
+  "ETH": {
+    "symbol": "ETH",
+    "name": "Ethereum",
+    "status": true,
+    "networks": {
+      "Ethereum": {
+        "network": "Ethereum",
+        "name": "Ethereum Network",
+        "keys": [
+          "Ethereum",
+          "ERC20",
+          "ETH"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 0.0003,
+        "withdraw_min": 0.0001,
+        "deposit_min": 0.0000042887,
+        "static_fixed_fee": 0
+      },
+      "BSC": {
+        "network": "BSC",
+        "name": "Binance Smart Chain",
+        "keys": [
+          "BSC",
+          "BEP20",
+          "BNB",
+          "Binance"
+        ],
+        "required_confirmations": 15,
+        "withdraw_fee": 0.000014,
+        "withdraw_min": 0.00025,
+        "deposit_min": 0.0000042887,
+        "static_fixed_fee": 0
+      },
+      "Base": {
+        "network": "Base",
+        "name": "Base Network",
+        "keys": [
+          "Base"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 8e-7,
+        "withdraw_min": 0.0002,
+        "deposit_min": 0.0000042887,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "USDT": {
+    "symbol": "USDT",
+    "name": "Tether",
+    "status": true,
+    "networks": {
+      "Ethereum": {
+        "network": "Ethereum",
+        "name": "Ethereum Network",
+        "keys": [
+          "Ethereum",
+          "ERC20",
+          "ETH"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 1,
+        "withdraw_min": 1,
+        "deposit_min": 0.01,
+        "static_fixed_fee": 0
+      },
+      "Tron": {
+        "network": "Tron",
+        "name": "Tron Network",
+        "keys": [
+          "Tron",
+          "TRC20",
+          "TRX"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 1,
+        "withdraw_min": 0.01,
+        "deposit_min": 0.01,
+        "static_fixed_fee": 0.46
+      },
+      "BSC": {
+        "network": "BSC",
+        "name": "Binance Smart Chain",
+        "keys": [
+          "BSC",
+          "BEP20",
+          "BNB",
+          "Binance"
+        ],
+        "required_confirmations": 15,
+        "withdraw_fee": 0.25,
+        "withdraw_min": 0.01,
+        "deposit_min": 0.01,
+        "static_fixed_fee": 0
+      },
+      "Solana": {
+        "network": "Solana",
+        "name": "Solana Network",
+        "keys": [
+          "Solana",
+          "SOL"
+        ],
+        "required_confirmations": 30,
+        "withdraw_fee": 0.5,
+        "withdraw_min": 0.1,
+        "deposit_min": 0.01,
+        "static_fixed_fee": 0
+      },
+      "Polygon": {
+        "network": "Polygon",
+        "name": "Polygon Network",
+        "keys": [
+          "Polygon",
+          "POL"
+        ],
+        "required_confirmations": 50,
+        "withdraw_fee": 0.2,
+        "withdraw_min": 0.01,
+        "deposit_min": 0.01,
+        "static_fixed_fee": 0
+      },
+      "The Open Network": {
+        "network": "The Open Network",
+        "name": "TON Network",
+        "keys": [
+          "The Open Network",
+          "TON",
+          "GRAM"
+        ],
+        "required_confirmations": 3,
+        "withdraw_fee": 0.25,
+        "withdraw_min": 0.01,
+        "deposit_min": 0.01,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "USDC": {
+    "symbol": "USDC",
+    "name": "USD Coin",
+    "status": true,
+    "networks": {
+      "Ethereum": {
+        "network": "Ethereum",
+        "name": "Ethereum Network",
+        "keys": [
+          "Ethereum",
+          "ERC20",
+          "ETH"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 1,
+        "withdraw_min": 1,
+        "deposit_min": 0.0099890121,
+        "static_fixed_fee": 0
+      },
+      "BSC": {
+        "network": "BSC",
+        "name": "Binance Smart Chain",
+        "keys": [
+          "BSC",
+          "BEP20",
+          "BNB",
+          "Binance"
+        ],
+        "required_confirmations": 15,
+        "withdraw_fee": 0.25,
+        "withdraw_min": 0.1,
+        "deposit_min": 0.0099890121,
+        "static_fixed_fee": 0
+      },
+      "Solana": {
+        "network": "Solana",
+        "name": "Solana Network",
+        "keys": [
+          "Solana",
+          "SOL"
+        ],
+        "required_confirmations": 30,
+        "withdraw_fee": 0.25,
+        "withdraw_min": 0.1,
+        "deposit_min": 0.0099890121,
+        "static_fixed_fee": 0
+      },
+      "Polygon": {
+        "network": "Polygon",
+        "name": "Polygon Network",
+        "keys": [
+          "Polygon",
+          "POL"
+        ],
+        "required_confirmations": 50,
+        "withdraw_fee": 0.01,
+        "withdraw_min": 0.1,
+        "deposit_min": 0.0099890121,
+        "static_fixed_fee": 0
+      },
+      "Base": {
+        "network": "Base",
+        "name": "Base Network",
+        "keys": [
+          "Base"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 0.5,
+        "withdraw_min": 0.1,
+        "deposit_min": 0.0099890121,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "BNB": {
+    "symbol": "BNB",
+    "name": "BNB",
+    "status": true,
+    "networks": {
+      "BSC": {
+        "network": "BSC",
+        "name": "Binance Smart Chain",
+        "keys": [
+          "BSC",
+          "BEP20",
+          "BNB",
+          "Binance"
+        ],
+        "required_confirmations": 15,
+        "withdraw_fee": 0.000048,
+        "withdraw_min": 0.0004,
+        "deposit_min": 0.0000135455,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "DOGE": {
+    "symbol": "DOGE",
+    "name": "Dogecoin",
+    "status": true,
+    "networks": {
+      "Dogecoin": {
+        "network": "Dogecoin",
+        "name": "Dogecoin Network",
+        "keys": [
+          "Dogecoin",
+          "DOGE"
+        ],
+        "required_confirmations": 12,
+        "withdraw_fee": 0.0096,
+        "withdraw_min": 0.01,
+        "deposit_min": 0.1305312622,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "POL": {
+    "symbol": "POL",
+    "name": "Polygon",
+    "status": true,
+    "networks": {
+      "Polygon": {
+        "network": "Polygon",
+        "name": "Polygon Network",
+        "keys": [
+          "Polygon",
+          "POL"
+        ],
+        "required_confirmations": 50,
+        "withdraw_fee": 0.02,
+        "withdraw_min": 0.001,
+        "deposit_min": 0.1136363636,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "LTC": {
+    "symbol": "LTC",
+    "name": "Litecoin",
+    "status": true,
+    "networks": {
+      "Litecoin": {
+        "network": "Litecoin",
+        "name": "Litecoin Network",
+        "keys": [
+          "Litecoin",
+          "LTC"
+        ],
+        "required_confirmations": 3,
+        "withdraw_fee": 0.00016,
+        "withdraw_min": 0.002,
+        "deposit_min": 0.0001777146,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "SOL": {
+    "symbol": "SOL",
+    "name": "Solana",
+    "status": true,
+    "networks": {
+      "Solana": {
+        "network": "Solana",
+        "name": "Solana Network",
+        "keys": [
+          "Solana",
+          "SOL"
+        ],
+        "required_confirmations": 30,
+        "withdraw_fee": 0.00005,
+        "withdraw_min": 0.001,
+        "deposit_min": 0.0000992457,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "TRX": {
+    "symbol": "TRX",
+    "name": "Tron",
+    "status": true,
+    "networks": {
+      "Tron": {
+        "network": "Tron",
+        "name": "Tron Network",
+        "keys": [
+          "Tron",
+          "TRC20",
+          "TRX"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 1,
+        "withdraw_min": 0.0001,
+        "deposit_min": 0.0304136253,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "SHIB": {
+    "symbol": "SHIB",
+    "name": "Shiba Inu",
+    "status": true,
+    "networks": {
+      "Ethereum": {
+        "network": "Ethereum",
+        "name": "Ethereum Network",
+        "keys": [
+          "Ethereum",
+          "ERC20",
+          "ETH"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 256000,
+        "withdraw_min": 10000,
+        "deposit_min": 2061855.6701030927,
+        "static_fixed_fee": 0
+      },
+      "BSC": {
+        "network": "BSC",
+        "name": "Binance Smart Chain",
+        "keys": [
+          "BSC",
+          "BEP20",
+          "BNB",
+          "Binance"
+        ],
+        "required_confirmations": 15,
+        "withdraw_fee": 6400,
+        "withdraw_min": 1000,
+        "deposit_min": 2061.8556701031,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "GRAM": {
+    "symbol": "GRAM",
+    "name": "Gram (prev. Toncoin)",
+    "status": true,
+    "networks": {
+      "The Open Network": {
+        "network": "The Open Network",
+        "name": "TON Network",
+        "keys": [
+          "The Open Network",
+          "TON",
+          "GRAM"
+        ],
+        "required_confirmations": 3,
+        "withdraw_fee": 0.0082,
+        "withdraw_min": 0.01,
+        "deposit_min": 0.0080064051,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "XMR": {
+    "symbol": "XMR",
+    "name": "Monero",
+    "status": true,
+    "networks": {
+      "Monero": {
+        "network": "Monero",
+        "name": "Monero Network",
+        "keys": [
+          "Monero",
+          "XMR"
+        ],
+        "required_confirmations": 6,
+        "withdraw_fee": 0.00009,
+        "withdraw_min": 0.0001,
+        "deposit_min": 0.0000165229,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "DAI": {
+    "symbol": "DAI",
+    "name": "DAI",
+    "status": true,
+    "networks": {
+      "Ethereum": {
+        "network": "Ethereum",
+        "name": "Ethereum Network",
+        "keys": [
+          "Ethereum",
+          "ERC20",
+          "ETH"
+        ],
+        "required_confirmations": 10,
+        "withdraw_fee": 1,
+        "withdraw_min": 1,
+        "deposit_min": 0.01,
+        "static_fixed_fee": 0
+      },
+      "Polygon": {
+        "network": "Polygon",
+        "name": "Polygon Network",
+        "keys": [
+          "Polygon",
+          "POL"
+        ],
+        "required_confirmations": 50,
+        "withdraw_fee": 0.25,
+        "withdraw_min": 0.01,
+        "deposit_min": 0.01,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "BCH": {
+    "symbol": "BCH",
+    "name": "Bitcoin Cash",
+    "status": true,
+    "networks": {
+      "BitcoinCash": {
+        "network": "BitcoinCash",
+        "name": "Bitcoin Cash Network",
+        "keys": [
+          "BitcoinCash",
+          "BCH"
+        ],
+        "required_confirmations": 4,
+        "withdraw_fee": 0.000024,
+        "withdraw_min": 0.00001,
+        "deposit_min": 0.0000366703,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "NOT": {
+    "symbol": "NOT",
+    "name": "NotCoin",
+    "status": true,
+    "networks": {
+      "The Open Network": {
+        "network": "The Open Network",
+        "name": "TON Network",
+        "keys": [
+          "The Open Network",
+          "TON",
+          "GRAM"
+        ],
+        "required_confirmations": 3,
+        "withdraw_fee": 72,
+        "withdraw_min": 5,
+        "deposit_min": 27.2034820457,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "DOGS": {
+    "symbol": "DOGS",
+    "name": "Dogs",
+    "status": true,
+    "networks": {
+      "The Open Network": {
+        "network": "The Open Network",
+        "name": "TON Network",
+        "keys": [
+          "The Open Network",
+          "TON",
+          "GRAM"
+        ],
+        "required_confirmations": 3,
+        "withdraw_fee": 240,
+        "withdraw_min": 5,
+        "deposit_min": 281.4522938362,
+        "static_fixed_fee": 0
+      }
+    }
+  },
+  "XRP": {
+    "symbol": "XRP",
+    "name": "Ripple",
+    "status": true,
+    "networks": {
+      "xrpl": {
+        "network": "xrpl",
+        "name": "Ripple",
+        "keys": [
+          "xrpl",
+          "xrp",
+          "ripple"
+        ],
+        "required_confirmations": 5,
+        "withdraw_fee": 0.01,
+        "withdraw_min": 1.5,
+        "deposit_min": 0.0077345502,
+        "static_fixed_fee": 0
+      }
+    }
+  }
+}
