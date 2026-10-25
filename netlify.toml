@@ -10,6 +10,9 @@
 [build.environment]
   NODE_VERSION = "24"
   ORDER_STORE = "appwrite"
+  # Public identifiers and local server settings are not credentials.
+  # Keep APPWRITE_API_KEY and OXAPAY_MERCHANT_API_KEY scanned.
+  SECRETS_SCAN_OMIT_KEYS = "APPWRITE_ENDPOINT,APPWRITE_PROJECT_ID,APPWRITE_DATABASE_ID,APPWRITE_ORDERS_COLLECTION_ID,DATABASE_PATH,HOST,PORT,PUBLIC_BASE_URL"
 
 [[redirects]]
   from = "/api/*"
