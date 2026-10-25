@@ -1,50 +1,40 @@
 import { createGridModelRenderer, loadModel } from '/vendor/badge-renderer.mjs';
 
-// One shared WebGL context avoids exhausting browser context limits on a long catalogue.
+// One shared WebGL renderer supplies card-local canvases. The browser moves
+// each canvas with its card, so scroll alignment never waits for JavaScript.
 const canvas = document.createElement('canvas');
-canvas.id = 'product-badge-layer';
-canvas.setAttribute('aria-hidden', 'true');
-(document.querySelector('nav')?.parentElement || document.body).append(canvas);
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
 const touchLayout = matchMedia('(hover: none), (pointer: coarse)');
-let renderer, views = [], raf = 0, previous = 0, width = 0, height = 0, dpr = 1;
 const tracked = new WeakMap();
 const pending = new Set();
-let dead = false;
+let renderer, views = [], raf = 0, previous = 0, dead = false;
 
 function invalidate() {
   if (!raf && !document.hidden && !dead) raf = requestAnimationFrame(paint);
 }
 
-function resize() {
-  dpr = Math.min(window.devicePixelRatio || 1, touchLayout.matches ? 1.5 : 2);
-  width = window.innerWidth;
-  height = window.innerHeight;
-  const physicalWidth = Math.round(width * dpr), physicalHeight = Math.round(height * dpr);
-  if (canvas.width !== physicalWidth || canvas.height !== physicalHeight) {
-    canvas.width = physicalWidth;
-    canvas.height = physicalHeight;
-    renderer?.syncSize();
-  }
-  invalidate();
-}
-
 function sync() {
-  views = [...document.querySelectorAll('[data-badge-model]')].map(element => {
+  const next = [...document.querySelectorAll('[data-badge-model]')].map(element => {
     let view = tracked.get(element);
     if (!view) {
       view = { element, modelUrl: element.dataset.badgeModel, hovered: false };
       tracked.set(element, view);
-      const card = element.closest('[data-product]') || element.closest('.checkout-card') || element;
-      const setHover = hovered => { view.hovered = hovered && !reducedMotion.matches && !touchLayout.matches; invalidate(); };
+      const card = element.closest('[data-product], .checkout-card') || element;
+      const setHover = value => { view.hovered = value && !reducedMotion.matches && !touchLayout.matches; invalidate(); };
       card.addEventListener('pointerenter', event => { if (event.pointerType !== 'touch') setHover(true); });
       card.addEventListener('pointerleave', () => setHover(false));
       card.addEventListener('focusin', () => setHover(true));
       card.addEventListener('focusout', event => { if (!card.contains(event.relatedTarget)) setHover(false); });
     }
-    if (view.modelUrl !== element.dataset.badgeModel) view.modelUrl = element.dataset.badgeModel;
+    if (view.modelUrl !== element.dataset.badgeModel) {
+      view.modelUrl = element.dataset.badgeModel;
+      delete element.dataset.badgeReady;
+      view.context?.clearRect(0, 0, view.surface.width, view.surface.height);
+    }
     return view;
   });
+  for (const view of views) if (!next.includes(view)) { view.surface?.remove(); delete view.element.dataset.badgeReady; }
+  views = next;
   invalidate();
 }
 
@@ -53,55 +43,75 @@ function paint(now) {
   if (!renderer || document.hidden || dead) return;
   const dt = previous ? Math.min(50, now - previous) : 16;
   previous = now;
-  renderer.clear();
-  const visible = new Set(), needsFrame = [false];
-  let floating = false;
+  const visible = new Set();
+  const dpr = Math.min(devicePixelRatio || 1, touchLayout.matches ? 1.5 : 2);
+  let moving = false;
   for (const view of views) {
-    const element = view.element;
-    // display:none filtering and detached checkout DOM must never leave ghost badges.
+    const { element } = view;
     if (!element.isConnected || !element.getClientRects().length) continue;
     const rect = element.getBoundingClientRect();
-    if (rect.width < 1 || rect.height < 1 || rect.bottom <= 0 || rect.top >= height || rect.right <= 0 || rect.left >= width) continue;
+    // Warm up before cards enter the viewport during a fast swipe.
+    if (rect.width < 1 || rect.height < 1 || rect.bottom < -200 || rect.top > innerHeight + 200 || rect.right <= 0 || rect.left >= innerWidth) continue;
     visible.add(view);
-    if (view.modelUrl.endsWith('-legend.glb') && !reducedMotion.matches) floating = true;
     const model = loadModel(view.modelUrl);
     if (!model.ready) {
       if (!pending.has(model)) {
         pending.add(model);
-        model.whenReady.then(() => { element.dataset.badgeReady = model.ready ? 'true' : 'error'; invalidate(); });
+        model.whenReady.then(invalidate);
       }
       continue;
     }
-    element.dataset.badgeReady = 'true';
-    // Touch devices use the exact desktop hover animation while in view.
-    // Its rotation, easing and shimmer are all supplied by the shared renderer.
+    const w = Math.max(1, Math.round(rect.width * dpr));
+    const h = Math.max(1, Math.round(rect.height * dpr));
+    if (!view.surface) {
+      view.surface = document.createElement('canvas');
+      view.surface.className = 'product-badge-surface';
+      view.surface.setAttribute('aria-hidden', 'true');
+      view.context = view.surface.getContext('2d');
+      if (!view.context) continue;
+      element.append(view.surface);
+    }
+    if (!view.context) continue;
+    if (view.surface.width !== w || view.surface.height !== h) {
+      view.surface.width = w;
+      view.surface.height = h;
+    }
+    if (canvas.width !== w || canvas.height !== h) {
+      canvas.width = w;
+      canvas.height = h;
+      renderer.syncSize();
+    }
     if (touchLayout.matches) view.hovered = !reducedMotion.matches;
-    renderer.drawModel(view, Math.round(rect.left * dpr), Math.round((height - rect.bottom) * dpr),
-      Math.round(rect.width * dpr), Math.round(rect.height * dpr), dt, 1, needsFrame);
+    const needsFrame = [false];
+    renderer.clear();
+    if (!renderer.drawModel(view, 0, 0, w, h, dt, 1, needsFrame)) continue;
+    view.context.clearRect(0, 0, w, h);
+    view.context.drawImage(canvas, 0, 0);
+    element.dataset.badgeReady = 'true';
+    moving ||= needsFrame[0];
   }
   renderer.releaseViews(visible);
-  if (needsFrame[0] || floating) invalidate();
+  if (moving) invalidate();
   else previous = 0;
 }
 
-function start() {
-  resize();
-  renderer = createGridModelRenderer(canvas);
-  if (!renderer) { canvas.remove(); return; }
-  sync();
-}
-
-// Canvas loss can happen after a device/GPU reset; restore the same visible view set.
-canvas.addEventListener('webglcontextlost', event => { event.preventDefault(); dead = true; cancelAnimationFrame(raf); raf = 0; });
-canvas.addEventListener('webglcontextrestored', () => { dead = false; renderer?.dispose(); renderer = createGridModelRenderer(canvas); resize(); sync(); });
+canvas.addEventListener('webglcontextlost', event => {
+  event.preventDefault(); dead = true; cancelAnimationFrame(raf); raf = 0;
+});
+canvas.addEventListener('webglcontextrestored', () => {
+  dead = false; renderer?.dispose(); renderer = createGridModelRenderer(canvas); invalidate();
+});
 const observer = new MutationObserver(sync);
 observer.observe(document.querySelector('main') || document.body, {
   childList: true, subtree: true, attributes: true,
   attributeFilter: ['hidden', 'data-badge-model', 'class']
 });
 window.addEventListener('scroll', invalidate, { passive: true });
-window.addEventListener('resize', resize, { passive: true });
+window.addEventListener('resize', invalidate, { passive: true });
 document.addEventListener('visibilitychange', () => { previous = 0; invalidate(); });
-reducedMotion.addEventListener('change', () => { for (const view of views) view.hovered = false; invalidate(); });
-touchLayout.addEventListener('change', () => { for (const view of views) view.hovered = false; resize(); });
-start();
+for (const media of [reducedMotion, touchLayout]) media.addEventListener('change', () => {
+  for (const view of views) view.hovered = false;
+  previous = 0; invalidate();
+});
+renderer = createGridModelRenderer(canvas);
+if (renderer) sync();
