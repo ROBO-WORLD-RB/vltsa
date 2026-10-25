@@ -8,8 +8,9 @@ import { fileURLToPath } from 'node:url';
 import QRCode from 'qrcode';
 import { createPaymentMethods } from './payment-methods.mjs';
 import { sqliteStore, appwriteStore } from './order-store.mjs';
+import bundledCatalog from './data/catalog.json' with {type:'json'};
 
-const root = path.dirname(fileURLToPath(import.meta.url));
+const root = import.meta.url ? path.dirname(fileURLToPath(import.meta.url)) : process.cwd();
 export function createApp(options = {}) {
   const apiKey = (options.apiKey ?? process.env.OXAPAY_MERCHANT_API_KEY ?? '').trim();
   const baseUrl = (options.baseUrl ?? process.env.PUBLIC_BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
@@ -24,7 +25,7 @@ export function createApp(options = {}) {
   const store=options.store??(options.dbPath!==undefined||process.env.ORDER_STORE==='sqlite'?sqliteStore(dbPath):appwriteStore());
   if(process.env.NETLIFY&&store.kind!=='appwrite')throw Error('Netlify requires Appwrite order storage');
   function catalog() {
-    const entries = options.catalog ?? JSON.parse(readFileSync(path.join(root, 'data', 'catalog.json'), 'utf8'));
+    const entries = options.catalog ?? (process.env.LAMBDA_TASK_ROOT ? bundledCatalog : JSON.parse(readFileSync(path.join(root, 'data', 'catalog.json'), 'utf8')));
     if (!Array.isArray(entries)) throw new Error('Catalog must be an array');
     return entries;
   }
@@ -201,7 +202,7 @@ export function createApp(options = {}) {
   app.locals.reconcile=reconcile;
   return app;
 }
-if (process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
+if (import.meta.url && process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   const port = Number(process.env.PORT ?? 3000);
   createApp().listen(port,process.env.HOST ?? '127.0.0.1',()=>console.log(`Vltstore: http://localhost:${port}`));
 }

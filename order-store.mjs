@@ -4,7 +4,7 @@ import { mkdirSync } from 'node:fs';
 import path from 'node:path';
 
 export function sqliteStore(dbPath) {
-  const {DatabaseSync}=createRequire(import.meta.url)('node:sqlite');
+  const {DatabaseSync}=createRequire(import.meta.url || path.join(process.cwd(),'package.json'))('node:sqlite');
   if(dbPath!==':memory:')mkdirSync(path.dirname(dbPath),{recursive:true});
   const db=new DatabaseSync(dbPath);
   db.exec(`PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;

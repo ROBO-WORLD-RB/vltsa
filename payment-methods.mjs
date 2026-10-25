@@ -1,5 +1,4 @@
-import { readFileSync } from 'node:fs';
-const snapshot=JSON.parse(readFileSync(new URL('./data/payment-currencies.json',import.meta.url),'utf8'));
+import snapshot from './data/payment-currencies.json' with {type:'json'};
 
 export function normalizeMethods(data,accepted){
   const allowed=accepted?new Set(accepted.map(s=>String(s).toUpperCase())):null;
