@@ -57,6 +57,7 @@ function paint(now) {
   previous = now;
   renderer.clear();
   const visible = new Set(), needsFrame = [false];
+  let floating = false;
   for (const view of views) {
     const element = view.element;
     // display:none filtering and detached checkout DOM must never leave ghost badges.
@@ -64,6 +65,7 @@ function paint(now) {
     const rect = element.getBoundingClientRect();
     if (rect.width < 1 || rect.height < 1 || rect.bottom <= 0 || rect.top >= height || rect.right <= 0 || rect.left >= width) continue;
     visible.add(view);
+    if (view.modelUrl.endsWith('-legend.glb') && !reducedMotion.matches) floating = true;
     const model = loadModel(view.modelUrl);
     if (!model.ready) {
       if (!pending.has(model)) {
@@ -77,7 +79,7 @@ function paint(now) {
       Math.round(rect.width * dpr), Math.round(rect.height * dpr), dt, 1, needsFrame);
   }
   renderer.releaseViews(visible);
-  if (needsFrame[0]) invalidate();
+  if (needsFrame[0] || floating) invalidate();
   else previous = 0;
 }
 

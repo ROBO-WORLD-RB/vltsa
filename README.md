@@ -13,7 +13,9 @@ Open http://localhost:3000. Run `npm test` for payment integration checks. No me
 
 ## Database
 
-SQLite is configured and initialized automatically by the server. It stores orders, stock reservations, payment instructions, and verified callback events. The catalogue is managed separately in `data/catalog.json`.
+The catalogue is managed in `data/catalog.json`; customer order data is stored in Appwrite TablesDB.
+
+Appwrite TablesDB is the authoritative order store by default. Configure the server variables in `.env.example`, then run `node scripts/appwrite-setup.mjs` to provision its schema. Orders, customer tokens, payment instructions, reservations and verified callback receipts are persisted in Appwrite. Checkout reserves stock and creates an order in one transaction; status changes use conflict detection and retries. Netlify requires this storage mode and never falls back to SQLite. SQLite is available only for explicit local tests (`dbPath`) or `ORDER_STORE=sqlite`.
 
 Run `npm run db:init` to create or migrate the database without starting the server. Run `npm run db:status` to check integrity, schema and record counts. Both commands are idempotent and never contact OxaPay. The default local database is `data/orders.sqlite`; change `DATABASE_PATH` for deployment. Database files and `.env` secrets are excluded from Git.
 
@@ -28,6 +30,12 @@ The current 39 catalogue listings are enabled for checkout. Manage entries in `d
 Payment confirmations are stored persistently. Actual delivery is currently manual (`awaiting_delivery`); an email/credential delivery service has not been configured. Add your support channels, purchase terms and privacy policy before sales. Reference reviews were replaced with a new-store placeholder.
 
 ## Files
+
+The homepage links to six dedicated catalogue pages: `/discord`, `/minecraft`, `/hytale`, `/twitter`, `/instagram`, and `/tiktok`. Each page has independent search, price and length filters. Checkout returns to its own category page. Old category hash links redirect to the new pages.
+
+The catalogue includes 18 proposed social listings (six per platform) with original animated GLB badges. These entries start with `active: false`; confirm actual stock before enabling purchases. TikTok uses a black background with white, cyan and pink logo details.
+
+`data/storefront-template.html` is the source layout. `npm run build` generates the homepage and category HTML through `scripts/build-pages.mjs`. `scripts/add-social-categories.mjs` generates the original social meshes and fallback artwork and adds missing social entries without changing existing inventory.
 
 - `public/index.html`, `public/store.js`, `public/store.css`: storefront, filters, responsive navigation, checkout and order status.
 - `public/badges.mjs`, `public/vendor/badge-renderer.mjs`: shared WebGL rendering for original 3D tag models, hover tilt, gentle oscillation and shimmer.

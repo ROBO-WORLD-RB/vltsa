@@ -9,7 +9,7 @@ function check(name,ok){checks.push({name,ok});if(!ok)issues.push(name);}
 check('Node.js 24.15+ or newer',Number(process.versions.node.split('.')[0])>24||Number(process.versions.node.split('.')[0])===24&&Number(process.versions.node.split('.')[1])>=15);
 const catalog=JSON.parse(fs.readFileSync(path.join(root,'data/catalog.json'),'utf8'));
 check('Unique product IDs',new Set(catalog.map(p=>p.id)).size===catalog.length);
-check('Valid prices and categories',catalog.every(p=>Number.isSafeInteger(p.priceCents)&&p.priceCents>=100&&['discord','minecraft','hytale'].includes(p.category)));
+check('Valid prices and categories',catalog.every(p=>Number.isSafeInteger(p.priceCents)&&p.priceCents>=100&&['discord','minecraft','hytale','twitter','instagram','tiktok'].includes(p.category)));
 const html=fs.readFileSync(path.join(root,'public/index.html'),'utf8'),$=cheerio.load(html);
 const files=new Set(['/store.js','/checkout-ui.mjs','/store.css','/payments.css','/badges.mjs','/vendor/badge-renderer.mjs']);
 $('[src],link[href]').each((i,e)=>{const src=$(e).attr('src')||$(e).attr('href');if(src?.startsWith('/'))files.add(src);});

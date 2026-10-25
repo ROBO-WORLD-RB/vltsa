@@ -582,5 +582,311 @@
       "No past owners"
     ],
     "active": true
+  },
+  {
+    "id": "twitter-titan",
+    "name": "@titan",
+    "category": "twitter",
+    "priceCents": 1149880,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @titan",
+      "Legacy era username",
+      "Verified-style profile badge",
+      "187.47K followers",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "twitter-icon",
+    "name": "@icon",
+    "category": "twitter",
+    "priceCents": 1057280,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @icon",
+      "Legacy era username",
+      "Unverified profile",
+      "164.32K followers",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "twitter-legend",
+    "name": "@legend",
+    "category": "twitter",
+    "priceCents": 1395200,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @legend",
+      "2012-era handle",
+      "Verified-style profile badge",
+      "248.80K followers",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "twitter-reign",
+    "name": "@reign",
+    "category": "twitter",
+    "priceCents": 1180560,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @reign",
+      "Legacy era username",
+      "Unverified profile",
+      "195.14K followers",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "twitter-oracle",
+    "name": "@oracle",
+    "category": "twitter",
+    "priceCents": 1666880,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @oracle",
+      "2014-era handle",
+      "Verified-style profile badge",
+      "316.72K followers",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "twitter-bronze",
+    "name": "@bronze",
+    "category": "twitter",
+    "priceCents": 1010520,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @bronze",
+      "Legacy era username",
+      "Unverified profile",
+      "152.63K followers",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-crown",
+    "name": "@crown",
+    "category": "instagram",
+    "priceCents": 1537880,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @crown",
+      "Short handle",
+      "284.47K followers",
+      "3.82M profile views",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-prime",
+    "name": "@prime",
+    "category": "instagram",
+    "priceCents": 1185000,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @prime",
+      "Short handle",
+      "196.25K followers",
+      "2.41M profile views",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-onyx",
+    "name": "@onyx",
+    "category": "instagram",
+    "priceCents": 1088320,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @onyx",
+      "Short handle",
+      "172.08K followers",
+      "1.98M profile views",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-blaze",
+    "name": "@blaze",
+    "category": "instagram",
+    "priceCents": 1406520,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @blaze",
+      "Short handle",
+      "251.63K followers",
+      "1.64M profile views",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-phantom",
+    "name": "@phantom",
+    "category": "instagram",
+    "priceCents": 1353560,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @phantom",
+      "Short handle",
+      "238.39K followers",
+      "1.42M profile views",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-erase",
+    "name": "@erase",
+    "category": "instagram",
+    "priceCents": 1290960,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @erase",
+      "Short handle",
+      "222.74K followers",
+      "1.26M profile views",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-myth",
+    "name": "@myth",
+    "category": "tiktok",
+    "priceCents": 3651645,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @myth",
+      "Short creator handle",
+      "640.47K followers",
+      "18.2M likes",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-legend",
+    "name": "@legend",
+    "category": "tiktok",
+    "priceCents": 2560630,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @legend",
+      "Short creator handle",
+      "420.18K followers",
+      "11.8M likes",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-titan",
+    "name": "@titan",
+    "category": "tiktok",
+    "priceCents": 1905055,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @titan",
+      "Short creator handle",
+      "295.73K followers",
+      "7.4M likes",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-icon",
+    "name": "@icon",
+    "category": "tiktok",
+    "priceCents": 1376960,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @icon",
+      "Short creator handle",
+      "180.56K followers",
+      "4.9M likes",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-asap",
+    "name": "@asap",
+    "category": "tiktok",
+    "priceCents": 1292470,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @asap",
+      "Short creator handle",
+      "196.42K followers",
+      "2.1M likes",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-coerce",
+    "name": "@coerce",
+    "category": "tiktok",
+    "priceCents": 1096045,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @coerce",
+      "Short creator handle",
+      "154.87K followers",
+      "1.08M likes",
+      "Account transfer details confirmed before purchase"
+    ],
+    "active": true
   }
 ]

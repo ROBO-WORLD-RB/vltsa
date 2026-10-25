@@ -10,6 +10,10 @@ if(!['init','status'].includes(action)){
 }else{
   const app=createApp();
   const db=app.locals.db;
+  if(app.locals.store.kind==='appwrite'){
+    try{await app.locals.store.health();console.log(JSON.stringify({database:'Appwrite TablesDB',status:'healthy',activeOrders:(await app.locals.store.held()).length},null,2));}catch(error){console.error(error.message);process.exitCode=1;}
+    process.exit(process.exitCode||0);
+  }
   try{
     const integrity=db.prepare('PRAGMA integrity_check').get().integrity_check;
     const tables=db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name").all().map(row=>row.name);

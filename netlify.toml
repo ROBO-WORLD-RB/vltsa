@@ -1,0 +1,52 @@
+[build]
+  command = "npm run build"
+  publish = "public"
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+  included_files = ["data/catalog.json", "data/*currenc*.json"]
+
+[build.environment]
+  NODE_VERSION = "24"
+  ORDER_STORE = "appwrite"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/api/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/checkout/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/discord"
+  to = "/pages/discord.html"
+  status = 200
+
+[[redirects]]
+  from = "/minecraft"
+  to = "/pages/minecraft.html"
+  status = 200
+
+[[redirects]]
+  from = "/hytale"
+  to = "/pages/hytale.html"
+  status = 200
+
+[[redirects]]
+  from = "/twitter"
+  to = "/pages/twitter.html"
+  status = 200
+
+[[redirects]]
+  from = "/instagram"
+  to = "/pages/instagram.html"
+  status = 200
+
+[[redirects]]
+  from = "/tiktok"
+  to = "/pages/tiktok.html"
+  status = 200

@@ -1,13 +1,13 @@
 import 'dotenv/config';
 import express from 'express';
 import { rateLimit } from 'express-rate-limit';
-import { DatabaseSync } from 'node:sqlite';
 import { createHmac, timingSafeEqual, randomBytes, randomUUID } from 'node:crypto';
-import { readFileSync, mkdirSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import QRCode from 'qrcode';
 import { createPaymentMethods } from './payment-methods.mjs';
+import { sqliteStore, appwriteStore } from './order-store.mjs';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 export function createApp(options = {}) {
@@ -21,30 +21,14 @@ export function createApp(options = {}) {
   const fetcher = options.fetcher ?? fetch;
   const getPaymentMethods=createPaymentMethods({apiKey,fetcher,methods:options.paymentMethods});
   const dbPath = options.dbPath ?? process.env.DATABASE_PATH ?? path.join(root, 'data', 'orders.sqlite');
-  if (dbPath !== ':memory:') mkdirSync(path.dirname(dbPath), { recursive: true });
-  const db = new DatabaseSync(dbPath);
-  db.exec(`PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;
-    CREATE TABLE IF NOT EXISTS orders (
-      id TEXT PRIMARY KEY, token TEXT UNIQUE NOT NULL, product_id TEXT NOT NULL,
-      name TEXT NOT NULL, amount_cents INTEGER NOT NULL, email TEXT NOT NULL,
-      status TEXT NOT NULL, track_id TEXT UNIQUE, payment_url TEXT,
-      created_at INTEGER NOT NULL, expires_at INTEGER, paid_at INTEGER
-    );
-    CREATE UNIQUE INDEX IF NOT EXISTS one_active_order ON orders(product_id)
-      WHERE status NOT IN ('expired','failed');
-    CREATE TABLE IF NOT EXISTS payment_events (
-      digest TEXT PRIMARY KEY, order_id TEXT NOT NULL, status TEXT NOT NULL, received_at INTEGER NOT NULL
-    );`);
-  // Migrate existing stores without replacing their orders or payment records.
-  const columns=new Set(db.prepare('PRAGMA table_info(orders)').all().map(c=>c.name));
-  if(!columns.has('payment_type'))db.exec("ALTER TABLE orders ADD COLUMN payment_type TEXT NOT NULL DEFAULT 'invoice'");
-  if(!columns.has('payment_details'))db.exec('ALTER TABLE orders ADD COLUMN payment_details TEXT');
+  const store=options.store??(options.dbPath!==undefined||process.env.ORDER_STORE==='sqlite'?sqliteStore(dbPath):appwriteStore());
+  if(process.env.NETLIFY&&store.kind!=='appwrite')throw Error('Netlify requires Appwrite order storage');
   function catalog() {
     const entries = options.catalog ?? JSON.parse(readFileSync(path.join(root, 'data', 'catalog.json'), 'utf8'));
     if (!Array.isArray(entries)) throw new Error('Catalog must be an array');
     return entries;
   }
-  function orderById(id) { return db.prepare('SELECT * FROM orders WHERE id=?').get(id); }
+  const orderById=id=>store.get(id);
   function publicOrder(order) {
     return { id: order.id, token: order.token, productId: order.product_id, name: order.name,
       amountCents: order.amount_cents, currency: 'USD', status: order.status,
@@ -76,13 +60,13 @@ export function createApp(options = {}) {
     const next = ({ paid:'paid',manual_accept:'paid',paying:'paying',underpaid:'underpaid',
       refunding:'refunding',refunded:'refunded',expired:'expired',failed:'failed',new:'pending',waiting:'pending' })[status];
     if(!next)throw new Error('Unrecognized payment state');
-    const latest=orderById(order.id);
+    return store.mutate(order.id,latest=>{
     // Ignore stale updates, while allowing a verified refund after payment.
     if(latest.status==='refunded'||latest.status==='refunding'&&next!=='refunded'||
       latest.status==='paid'&&!['refunding','refunded'].includes(next))return latest;
-    db.prepare(`UPDATE orders SET status=?, track_id=COALESCE(track_id,?), paid_at=CASE WHEN ?='paid' THEN COALESCE(paid_at,?) ELSE paid_at END
-      WHERE id=?`).run(next, String(trackId), next, Date.now(), order.id);
-    return orderById(order.id);
+    if(latest.track_id&&latest.track_id!==String(trackId))throw Error('Conflicting invoice identity');
+    return {...latest,status:next,track_id:latest.track_id??String(trackId),paid_at:next==='paid'?(latest.paid_at??Date.now()):latest.paid_at};
+    });
   }
   const app = express();
   app.disable('x-powered-by');
@@ -99,25 +83,25 @@ export function createApp(options = {}) {
       return res.status(401).send('Invalid signature');
     try {
       const event = JSON.parse(req.body.toString('utf8'));
-      const order = orderById(event.order_id);
+      const order = await orderById(event.order_id);
       if (!order || !event.track_id || (order.track_id && String(event.track_id)!==order.track_id) ||
           (event.type && event.type.replaceAll('-','_')!==order.payment_type)) return res.status(400).send('Unknown invoice');
       const digest = createHmac('sha256', apiKey).update(req.body).digest('hex');
-      if (db.prepare('SELECT digest FROM payment_events WHERE digest=?').get(digest)) return res.send('ok');
+      if (await store.hasEvent(digest)) return res.send('ok');
       const updated = await reconcile(order, String(event.track_id));
-      db.prepare('INSERT OR IGNORE INTO payment_events VALUES (?,?,?,?)').run(digest,order.id,updated.status,Date.now());
+      await store.event(digest,order.id,updated.status);
       return res.send('ok');
     } catch { return res.status(503).send('Payment verification pending'); }
   });
   app.use('/api', express.json({limit:'8kb'}));
-  app.get('/api/health', (req,res) => res.json({ok:true,paymentsConfigured:!!apiKey,sandbox}));
+  app.get('/api/health', async(req,res) => {try{if(store.health)await store.health();res.json({ok:true,paymentsConfigured:!!apiKey,orderStore:store.kind,sandbox});}catch{res.status(503).json({ok:false,orderStore:store.kind});}});
   app.get('/api/payment-methods',async(req,res)=>{
     try{res.json({methods:await getPaymentMethods()});}
     catch{res.status(503).json({error:'Payment methods are temporarily unavailable. Please try again.'});}
   });
-  app.get('/api/catalog', (req,res,next) => {
+  app.get('/api/catalog', async(req,res,next) => {
     try {
-      const held = new Map(db.prepare("SELECT product_id,status FROM orders WHERE status NOT IN ('expired','failed')").all().map(o=>[o.product_id,o.status]));
+      const held = new Map((await store.held()).map(o=>[o.product_id,o.status]));
       res.json(catalog().map(p=>({id:p.id,name:p.name,category:p.category,priceCents:p.priceCents,
         image:typeof p.image==='string' && (/^\/assets\/[a-z0-9_./-]+$/i.test(p.image) && !p.image.includes('..') || /^https:\/\//i.test(p.image)) ? p.image : null,
         description:Array.isArray(p.description) ? p.description.filter(line=>typeof line==='string').slice(0,20) : [],
@@ -149,16 +133,15 @@ export function createApp(options = {}) {
     if (!product || !Number.isSafeInteger(product.priceCents) || product.priceCents<100)
       return res.status(409).json({error:'This listing is currently unavailable for purchase.'});
     // Refresh an expired-looking reservation from the provider before deciding whether it is safe to sell again.
-    const held = db.prepare("SELECT * FROM orders WHERE product_id=? AND status NOT IN ('expired','failed')").get(product.id);
+    const held = (await store.held()).find(o=>o.product_id===product.id);
     if (held?.track_id && held.status!=='paid' && held.expires_at && held.expires_at<Date.now()) {
       try { await reconcile(held); } catch { /* Hold safely until provider confirmation. */ }
     }
+    if(held&&!['expired','failed'].includes((await store.get(held.id))?.status))return res.status(409).json({error:'This listing is already reserved or sold.'});
     const id = randomUUID(), token = randomBytes(32).toString('hex');
     try {
-      db.prepare('INSERT INTO orders(id,token,product_id,name,amount_cents,email,status,created_at) VALUES (?,?,?,?,?,?,?,?)')
-        .run(id,token,product.id,product.name,product.priceCents,email,'creating',Date.now());
-      db.prepare('UPDATE orders SET payment_type=? WHERE id=?').run(method?'white_label':'invoice',id);
-    } catch { return res.status(409).json({error:'This listing is already reserved or sold.'}); }
+      await store.reserve({id,token,product_id:product.id,name:product.name,amount_cents:product.priceCents,email,status:'creating',created_at:Date.now(),payment_type:method?'white_label':'invoice',track_id:null,payment_url:null,payment_details:null,expires_at:null,paid_at:null});
+    } catch(e) { return res.status(e.status&&e.status!==409?503:409).json({error:e.status&&e.status!==409?'Order storage is temporarily unavailable.':'This listing is already reserved or sold.'}); }
     try {
       const invoice = await provider(method?'white-label':'invoice', { amount:product.priceCents/100,currency:'USD',lifetime:60,
         under_paid_coverage:0,fee_paid_by_payer:0,auto_withdrawal:false,
@@ -182,27 +165,24 @@ export function createApp(options = {}) {
         if(url.protocol!=='https:'||(url.hostname!=='oxapay.com'&&!url.hostname.endsWith('.oxapay.com'))||url.username||url.password)throw Error('Invalid payment invoice');
         paymentUrl=url.href;
       }
-      const updated = db.prepare(`UPDATE orders SET track_id=?,payment_url=?,payment_details=?,expires_at=?,status=CASE WHEN status='creating' THEN 'pending' ELSE status END
-        WHERE id=? AND (track_id IS NULL OR track_id=?)`)
-        .run(String(invoice.track_id),paymentUrl,details,Number(invoice.expired_at)*1000,id,String(invoice.track_id));
-      if (updated.changes!==1) throw new Error('Conflicting invoice identity');
-      res.status(201).json(publicOrder(orderById(id)));
+      const savedOrder=await store.mutate(id,current=>{if(current.track_id&&current.track_id!==String(invoice.track_id))throw Error('Conflicting invoice identity');return {...current,track_id:String(invoice.track_id),payment_url:paymentUrl,payment_details:details,expires_at:Number(invoice.expired_at)*1000,status:current.status==='creating'?'pending':current.status};});
+      res.status(201).json(publicOrder(savedOrder));
     } catch(e) {
       // A timeout may have created an invoice: retain this reservation to prevent two buyers paying for one name.
-      db.prepare("UPDATE orders SET status=? WHERE id=? AND status='creating'").run(e.definitive?'failed':'invoice_unknown',id);
+      await store.mutate(id,current=>({...current,status:current.status==='creating'?(e.definitive?'failed':'invoice_unknown'):current.status})).catch(()=>{});
       res.status(502).json({error:'Unable to start checkout. Please contact support before retrying.',orderToken:token});
     }
   });
   app.get('/api/orders/:token/qr.svg',async(req,res)=>{
     if(!/^[a-f0-9]{64}$/.test(req.params.token))return res.status(404).end();
-    const order=db.prepare('SELECT * FROM orders WHERE token=?').get(req.params.token);
+    const order=await store.byToken(req.params.token);
     if(!order?.payment_details||!['pending','paying'].includes(order.status)||order.expires_at<=Date.now())return res.status(404).end();
     try{res.type('svg').send(await QRCode.toString(JSON.parse(order.payment_details).address,{type:'svg',margin:2,width:240,errorCorrectionLevel:'M'}));}
     catch{res.status(503).end();}
   });
   app.get('/api/orders/:token', rateLimit({windowMs:60000,limit:90,standardHeaders:'draft-8',legacyHeaders:false}), async(req,res) => {
     if (!/^[a-f0-9]{64}$/.test(req.params.token)) return res.status(404).json({error:'Order not found.'});
-    let order = db.prepare('SELECT * FROM orders WHERE token=?').get(req.params.token);
+    let order = await store.byToken(req.params.token);
     if (!order) return res.status(404).json({error:'Order not found.'});
     // Webhooks remain the primary update path; order polling also repairs a missed callback.
     if (apiKey && order.track_id && !['paid','expired','failed','refunded'].includes(order.status)) {
@@ -211,10 +191,13 @@ export function createApp(options = {}) {
     res.json(publicOrder(order));
   });
   app.use('/api', (req,res)=>res.status(404).json({error:'Endpoint not found.'}));
+  app.get(['/discord','/minecraft','/hytale','/twitter','/instagram','/tiktok'], (req,res)=>
+    res.sendFile(path.join(root,'public','pages',req.path.slice(1)+'.html')));
   app.use(express.static(path.join(root,'public')));
   app.get('/checkout/:id', (req,res)=>res.sendFile(path.join(root,'public','index.html')));
   app.use((error,req,res,next)=>res.status(error.status===400?400:500).json({error:error.status===400?'Invalid request.':'Something went wrong.'}));
-  app.locals.db=db;
+  app.locals.db=store.db;
+  app.locals.store=store;
   app.locals.reconcile=reconcile;
   return app;
 }

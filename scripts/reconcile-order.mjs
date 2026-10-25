@@ -8,7 +8,7 @@ if(!orderId||!trackId||!process.env.OXAPAY_MERCHANT_API_KEY) {
 } else {
   const app=createApp();
   try {
-    const order=app.locals.db.prepare('SELECT * FROM orders WHERE id=?').get(orderId);
+    const order=await app.locals.store.get(orderId);
     if(!order) throw new Error('Order not found');
     if(order.track_id && order.track_id!==trackId) throw new Error('Track ID conflicts with stored invoice');
     const updated=await app.locals.reconcile(order,trackId);
@@ -16,5 +16,5 @@ if(!orderId||!trackId||!process.env.OXAPAY_MERCHANT_API_KEY) {
   } catch(error) {
     console.error(error.message);
     process.exitCode=1;
-  } finally {app.locals.db.close();}
+  } finally {app.locals.db?.close();}
 }

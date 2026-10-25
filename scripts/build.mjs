@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, mkdirSync, copyFileSync } from 'node:fs';
 import path from 'node:path';
+import './build-pages.mjs';
 
 const root = process.cwd();
 mkdirSync(path.join(root, 'dist'), { recursive: true });
