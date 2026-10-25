@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.mjs",
+    "build": "node scripts/build.mjs",
     "dev": "node --watch server.mjs",
     "test": "node --test tests/*.test.mjs",
     "build:reference": "node build-store.mjs",
