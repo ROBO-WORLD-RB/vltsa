@@ -113,7 +113,7 @@ export function createApp(options = {}) {
     } catch(e) { next(e); }
   });
   app.post('/api/checkout', rateLimit({windowMs:60000,limit:8,standardHeaders:'draft-8',legacyHeaders:false}), async (req,res) => {
-    if (!apiKey) return res.status(503).json({error:'Payments are not enabled yet. Please check back soon.'});
+    if (!apiKey) return res.status(503).json({error:'Payments are temporarily unavailable. Please try again later.'});
     if (!sandbox && (publicUrl.protocol!=='https:' || /^(localhost|127\.|0\.|10\.|192\.168\.|\[::1\])|\.localhost$|\.local$/i.test(publicUrl.hostname) || /^172\.(1[6-9]|2\d|3[01])\./.test(publicUrl.hostname)))
       return res.status(503).json({error:'Live checkout requires a public HTTPS address.'});
     if (req.get('origin') && req.get('origin') !== publicUrl.origin) return res.status(403).json({error:'Invalid checkout origin.'});

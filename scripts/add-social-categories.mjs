@@ -10,7 +10,7 @@ const platforms = [
 
 const socialStats = {
   twitter: {
-    titan: ['Legacy era username', 'Verified-style profile badge', '187.47K followers'], icon: ['Legacy era username', 'Unverified profile', '164.32K followers'], legend: ['2012-era handle', 'Verified-style profile badge', '248.80K followers'], reign: ['Legacy era username', 'Unverified profile', '195.14K followers'], oracle: ['2014-era handle', 'Verified-style profile badge', '316.72K followers'], bronze: ['Legacy era username', 'Unverified profile', '152.63K followers']
+    titan: ['Legacy era username', '187.47K followers'], icon: ['Legacy era username', 'Unverified profile', '164.32K followers'], legend: ['2012-era handle', '248.80K followers'], reign: ['Legacy era username', 'Unverified profile', '195.14K followers'], oracle: ['2014-era handle', '316.72K followers'], bronze: ['Legacy era username', 'Unverified profile', '152.63K followers']
   },
   instagram: {
     crown: ['Short handle', '284.47K followers', '3.82M profile views'], prime: ['Short handle', '196.25K followers', '2.41M profile views'], onyx: ['Short handle', '172.08K followers', '1.98M profile views'], blaze: ['Short handle', '251.63K followers', '1.64M profile views'], phantom: ['Short handle', '238.39K followers', '1.42M profile views'], erase: ['Short handle', '222.74K followers', '1.26M profile views']
@@ -93,7 +93,7 @@ for(const p of platforms){
     const imagePath='public/assets/tiktok-legend.svg';
     writeFileSync(imagePath,readFileSync(imagePath,'utf8').replaceAll(p.colour,'#000000').replaceAll('#161b28','#000000').replaceAll('#05070b','#000000'));
   }
-  for(const [name,dollars] of p.names){const id=`${p.id}-${name}`, stats=socialStats[p.id]?.[name]||[], priceCents=socialPrice(p.id,stats,dollars);const existing=catalog.find(item=>item.id===id);if(existing){existing.description=[`${p.label} handle: @${name}`,...stats,'Account transfer details confirmed before purchase'];existing.priceCents=priceCents;existing.active=true;}else catalog.push({id,name:`@${name}`,category:p.id,priceCents,tag:'OG',image:`/assets/${p.id}-legend.svg`,modelUrl:`/assets/models/${p.id}-legend.glb`,description:[`${p.label} handle: @${name}`,...stats,'Account transfer details confirmed before purchase'],active:true});}
+  for(const [name,dollars] of p.names){const id=`${p.id}-${name}`, stats=socialStats[p.id]?.[name]||[], priceCents=socialPrice(p.id,stats,dollars);const existing=catalog.find(item=>item.id===id);if(existing){existing.description=[`${p.label} handle: @${name}`,...stats];existing.priceCents=priceCents;existing.active=true;}else catalog.push({id,name:`@${name}`,category:p.id,priceCents,tag:'OG',image:`/assets/${p.id}-legend.svg`,modelUrl:`/assets/models/${p.id}-legend.glb`,description:[`${p.label} handle: @${name}`,...stats],active:true});}
   if($(`#${p.id}`).length)continue;
   const section=$('#discord').clone().attr('id',p.id).addClass(`social-category social-${p.id}`);
   section.find('h2').first().text(`${p.label} Accounts`);
