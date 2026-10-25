@@ -1,7 +1,9 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, mkdirSync, copyFileSync } from 'node:fs';
 import path from 'node:path';
 
 const root = process.cwd();
+mkdirSync(path.join(root, 'dist'), { recursive: true });
+copyFileSync(path.join(root, 'server.mjs'), path.join(root, 'dist', 'server.mjs'));
 const catalog = JSON.parse(readFileSync(path.join(root, 'data', 'catalog.json'), 'utf8'));
 if (!Array.isArray(catalog) || catalog.length === 0) throw new Error('Catalogue is empty or invalid');
 for (const product of catalog) {

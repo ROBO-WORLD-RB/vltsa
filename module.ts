@@ -1,10 +1,11 @@
 import { module } from '@prisma/composer';
 import { compute } from '@prisma/composer-prisma-cloud';
-import { node } from '@prisma/composer/node';
+import node from '@prisma/composer/node';
 
 const web = compute({
   name: 'web',
-  build: node({ module: import.meta.url, entry: './server.mjs' }),
+  deps: {},
+  build: node({ module: import.meta.url, entry: './dist/server.mjs' }),
 });
 
 export default module('vlts', ({ provision }) => {
