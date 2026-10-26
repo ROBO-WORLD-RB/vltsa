@@ -864,5 +864,193 @@
       "1.08M likes"
     ],
     "active": true
+  },
+  {
+    "id": "twitter-monarch",
+    "name": "@monarch",
+    "category": "twitter",
+    "priceCents": 1318560,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @monarch",
+      "Legacy era username",
+      "229.64K followers"
+    ],
+    "active": true
+  },
+  {
+    "id": "twitter-velvet",
+    "name": "@velvet",
+    "category": "twitter",
+    "priceCents": 1256720,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @velvet",
+      "2013-era handle",
+      "214.18K followers"
+    ],
+    "active": true
+  },
+  {
+    "id": "twitter-atlas",
+    "name": "@atlas",
+    "category": "twitter",
+    "priceCents": 1214880,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @atlas",
+      "2014-era handle",
+      "203.72K followers"
+    ],
+    "active": true
+  },
+  {
+    "id": "twitter-nova",
+    "name": "@nova",
+    "category": "twitter",
+    "priceCents": 1113840,
+    "tag": "OG",
+    "image": "/assets/twitter-legend.svg",
+    "modelUrl": "/assets/models/twitter-legend.glb",
+    "description": [
+      "X / Twitter handle: @nova",
+      "Legacy era username",
+      "178.46K followers"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-halo",
+    "name": "@halo",
+    "category": "instagram",
+    "priceCents": 1469400,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @halo",
+      "Short handle",
+      "267.35K followers",
+      "3.18M profile views"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-luxe",
+    "name": "@luxe",
+    "category": "instagram",
+    "priceCents": 1326560,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @luxe",
+      "Short handle",
+      "231.64K followers",
+      "2.76M profile views"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-muse",
+    "name": "@muse",
+    "category": "instagram",
+    "priceCents": 1154080,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @muse",
+      "Short handle",
+      "188.52K followers",
+      "2.08M profile views"
+    ],
+    "active": true
+  },
+  {
+    "id": "instagram-glow",
+    "name": "@glow",
+    "category": "instagram",
+    "priceCents": 1105880,
+    "tag": "OG",
+    "image": "/assets/instagram-legend.svg",
+    "modelUrl": "/assets/models/instagram-legend.glb",
+    "description": [
+      "Instagram handle: @glow",
+      "Short handle",
+      "176.47K followers",
+      "1.72M profile views"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-vibe",
+    "name": "@vibe",
+    "category": "tiktok",
+    "priceCents": 1766440,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @vibe",
+      "Short creator handle",
+      "271.84K followers",
+      "6.3M likes"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-drip",
+    "name": "@drip",
+    "category": "tiktok",
+    "priceCents": 1546665,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @drip",
+      "Short creator handle",
+      "226.19K followers",
+      "5.1M likes"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-rizz",
+    "name": "@rizz",
+    "category": "tiktok",
+    "priceCents": 1380660,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @rizz",
+      "Short creator handle",
+      "198.76K followers",
+      "3.7M likes"
+    ],
+    "active": true
+  },
+  {
+    "id": "tiktok-aura",
+    "name": "@aura",
+    "category": "tiktok",
+    "priceCents": 1205970,
+    "tag": "OG",
+    "image": "/assets/tiktok-legend.svg",
+    "modelUrl": "/assets/models/tiktok-legend.glb",
+    "description": [
+      "TikTok handle: @aura",
+      "Short creator handle",
+      "167.42K followers",
+      "2.4M likes"
+    ],
+    "active": true
   }
 ]

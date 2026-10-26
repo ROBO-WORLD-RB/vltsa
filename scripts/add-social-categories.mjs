@@ -3,20 +3,20 @@ import { readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { load } from 'cheerio';
 
 const platforms = [
-  { id:'twitter', label:'X / Twitter', colour:'#a3b9d1', base:[.035,.05,.08,1], names:[['titan',32000],['icon',28500],['legend',25000],['reign',19500],['oracle',14000],['bronze',9500]] },
-  { id:'instagram', label:'Instagram', colour:'#f294df', base:[.43,.035,.32,1], names:[['crown',30000],['prime',26000],['onyx',22000],['blaze',17500],['phantom',12500],['erase',8500]] },
-  { id:'tiktok', label:'TikTok', colour:'#64f4e5', base:[0,0,0,1], names:[['myth',28000],['legend',25000],['titan',22500],['icon',20000],['asap',15000],['coerce',7500]] },
+  { id:'twitter', label:'X / Twitter', colour:'#a3b9d1', base:[.035,.05,.08,1], names:[['titan',32000],['icon',28500],['legend',25000],['reign',19500],['oracle',14000],['bronze',9500],['monarch',22000],['velvet',18000],['atlas',15500],['nova',12000]] },
+  { id:'instagram', label:'Instagram', colour:'#f294df', base:[.43,.035,.32,1], names:[['crown',30000],['prime',26000],['onyx',22000],['blaze',17500],['phantom',12500],['erase',8500],['halo',24000],['luxe',20500],['muse',16500],['glow',13500]] },
+  { id:'tiktok', label:'TikTok', colour:'#64f4e5', base:[0,0,0,1], names:[['myth',28000],['legend',25000],['titan',22500],['icon',20000],['asap',15000],['coerce',7500],['vibe',21000],['drip',18500],['rizz',16000],['aura',13000]] },
 ];
 
 const socialStats = {
   twitter: {
-    titan: ['Legacy era username', '187.47K followers'], icon: ['Legacy era username', '164.32K followers'], legend: ['2012-era handle', '248.80K followers'], reign: ['Legacy era username', '195.14K followers'], oracle: ['2014-era handle', '316.72K followers'], bronze: ['Legacy era username', '152.63K followers']
+    titan: ['Legacy era username', '187.47K followers'], icon: ['Legacy era username', '164.32K followers'], legend: ['2012-era handle', '248.80K followers'], reign: ['Legacy era username', '195.14K followers'], oracle: ['2014-era handle', '316.72K followers'], bronze: ['Legacy era username', '152.63K followers'], monarch: ['Legacy era username', '229.64K followers'], velvet: ['2013-era handle', '214.18K followers'], atlas: ['2014-era handle', '203.72K followers'], nova: ['Legacy era username', '178.46K followers']
   },
   instagram: {
-    crown: ['Short handle', '284.47K followers', '3.82M profile views'], prime: ['Short handle', '196.25K followers', '2.41M profile views'], onyx: ['Short handle', '172.08K followers', '1.98M profile views'], blaze: ['Short handle', '251.63K followers', '1.64M profile views'], phantom: ['Short handle', '238.39K followers', '1.42M profile views'], erase: ['Short handle', '222.74K followers', '1.26M profile views']
+    crown: ['Short handle', '284.47K followers', '3.82M profile views'], prime: ['Short handle', '196.25K followers', '2.41M profile views'], onyx: ['Short handle', '172.08K followers', '1.98M profile views'], blaze: ['Short handle', '251.63K followers', '1.64M profile views'], phantom: ['Short handle', '238.39K followers', '1.42M profile views'], erase: ['Short handle', '222.74K followers', '1.26M profile views'], halo: ['Short handle', '267.35K followers', '3.18M profile views'], luxe: ['Short handle', '231.64K followers', '2.76M profile views'], muse: ['Short handle', '188.52K followers', '2.08M profile views'], glow: ['Short handle', '176.47K followers', '1.72M profile views']
   },
   tiktok: {
-    myth: ['Short creator handle', '640.47K followers', '18.2M likes'], legend: ['Short creator handle', '420.18K followers', '11.8M likes'], titan: ['Short creator handle', '295.73K followers', '7.4M likes'], icon: ['Short creator handle', '180.56K followers', '4.9M likes'], asap: ['Short creator handle', '196.42K followers', '2.1M likes'], coerce: ['Short creator handle', '154.87K followers', '1.08M likes']
+    myth: ['Short creator handle', '640.47K followers', '18.2M likes'], legend: ['Short creator handle', '420.18K followers', '11.8M likes'], titan: ['Short creator handle', '295.73K followers', '7.4M likes'], icon: ['Short creator handle', '180.56K followers', '4.9M likes'], asap: ['Short creator handle', '196.42K followers', '2.1M likes'], coerce: ['Short creator handle', '154.87K followers', '1.08M likes'], vibe: ['Short creator handle', '271.84K followers', '6.3M likes'], drip: ['Short creator handle', '226.19K followers', '5.1M likes'], rizz: ['Short creator handle', '198.76K followers', '3.7M likes'], aura: ['Short creator handle', '167.42K followers', '2.4M likes']
   }
 };
 function socialPrice(platform, stats, fallback) {
